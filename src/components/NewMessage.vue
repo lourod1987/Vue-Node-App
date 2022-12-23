@@ -1,6 +1,9 @@
 <template>
 <v-flex sm8 offset-sm2>
     <v-card>
+        <v-toolbar dark>
+            <v-toolbar-title>New Message</v-toolbar-title>
+        </v-toolbar>
         <v-form>
             <v-container>
                 <v-layout>
@@ -20,6 +23,7 @@
 </template>
 <script>
 import axios from 'axios';
+import store from '../store.js';
 
 export default {
     data() {
@@ -32,7 +36,7 @@ export default {
             try {
                 const msg = await axios.post("http://localhost:3000/messages", { message: this.messageBody });
                 console.log("This is the msg payload: " + msg.data.message);
-                this.$root.$emit('newMessage', msg.data.message);  
+                store.state.messages.push(msg.data.message);  
                 this.messageBody = '';
             } catch (error) {
                 console.log(error);
