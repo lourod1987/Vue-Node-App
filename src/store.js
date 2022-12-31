@@ -7,6 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         messages: [],
+        token: localStorage.getItem('token') || '',
     },
     mutations: {
         updateMessages(state, messages) {
@@ -14,6 +15,13 @@ export default new Vuex.Store({
         },
         newMessage(state, message) {
             state.messages.push(message);
+        },
+        auth(state, token) {
+            state.token = token;
+        },
+        logout(state) {
+            state.token = '';
+            localStorage.clear('token');
         },
     },
     actions: {
@@ -24,6 +32,21 @@ export default new Vuex.Store({
         async newMessage({commit}, messageBody) {
             const msg = await axios.post("http://localhost:3000/messages", { message: messageBody });
             commit('newMessage', msg.data.message);
+        },
+        async getMessage({commit}, id) {
+            return axios.get(`http://localhost:3000/message/${id}`);
+        },
+        async register({commit}, registerData) {
+            let token = (await axios.post("http://localhost:3000/register", registerData)).data;
+            localStorage.setItem("token", token);
+            axios.defaults.headers.common['Authorization'] = token;
+            commit("auth", token);
+        },
+        async login({commit}, registerData) {
+            let token = (await axios.post("http://localhost:3000/login", registerData)).data;
+            localStorage.setItem("token", token);
+            axios.defaults.headers.common['Authorization'] = token;
+            commit("auth", token);
         },
     }
 });

@@ -5,32 +5,28 @@
       color="primary"
       dark
     >
-     
+      <v-btn to="/">Messages</v-btn>
+      <v-btn to="/NewMessage">New Message</v-btn>
+      <v-spacer></v-spacer>
+      <v-btn v-if="!$store.state.token" to="/Register">Register</v-btn>
+      <v-btn v-if="!$store.state.token" to="/Login">Login</v-btn>
+      <v-btn v-if="$store.state.token" @click="$store.commit('logout')">Logout</v-btn>
     </v-app-bar>
 
     <v-main>
       <br>
-      <NewMessage/>
-      <br>
-      <UserMessages/>
+      <router-view></router-view>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import UserMessages from './components/UserMessages';
-import NewMessage from './components/NewMessage';
-
 export default {
   name: 'App',
-
-  components: {
-    UserMessages,
-    NewMessage,
+  data() {
+    return {
+    // 
+    };
   },
-
-  data: () => ({
-    //
-  }),
-};
+}
 </script>
